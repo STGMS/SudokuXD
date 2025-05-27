@@ -5,307 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🧪 Sudoku Químico</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background: #e0f7fa;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #003344;
-      position: relative;
-      min-height: 100vh;
-    }
-
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-      color: #00796b;
-    }
-
-    .description {
-      max-width: 700px;
-      text-align: center;
-      font-size: 1.2em;
-      margin-bottom: 30px;
-    }
-
-    .sudoku {
-      display: grid;
-      grid-template-columns: repeat(9, 60px);
-      grid-template-rows: repeat(9, 60px);
-      border: 4px solid #006064;
-    }
-
-    .cell {
-      box-sizing: border-box;
-      border: 1px solid #80cbc4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .cell input {
-      width: 100%;
-      height: 100%;
-      font-size: 12px;
-      text-align: center;
-      font-weight: bold;
-      text-transform: capitalize;
-      border: none;
-      background: transparent;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    .cell input.correct {
-      background-color: #c8e6c9;
-      box-sizing: border-box;
-    }
-
-    .cell input.incorrect {
-      background-color: #ffcdd2;
-      box-sizing: border-box;
-    }
-
-    .top-border { border-top: 3px solid #004d40; }
-    .left-border { border-left: 3px solid #004d40; }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 30px;
-      gap: 15px;
-    }
-
-    .legend-item {
-      background: #7dc0ca;
-      padding: 5px 10px;
-      border: 1px solid #4dd0e1;
-      border-radius: 5px;
-      font-size: 0.95em;
-      text-align: center;
-      min-width: 80px;
-    }
-
-    .controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .controls button, .controls select {
-      padding: 10px 15px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #00796b;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .controls button:hover, .controls select:hover {
-      background-color: #004d40;
-    }
-
-
-    .tooltip {
-  position: relative;
-  display: inline-block;
-  background: #7dc0ca;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: default;
-  color: #004d40;
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-
-.tooltip:hover {
-  background-color: #4db6ac;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 220px;
-  max-width: 90vw;
-  background-color: rgba(0, 0, 0, 0.85);
-  color: #fff;
-  text-align: center;
-  padding: 10px 15px;
-  border-radius: 8px;
-  position: absolute;
-  z-index: 10;
-  bottom: 130%; /* un poco más alto */
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  font-size: 0.9em;
-  line-height: 1.3em;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Flecha */
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
-}
-
-/* Imagen dentro del tooltip */
-.tooltip .tooltiptext img {
-  max-width: 100%;
-  height: auto;
-  margin-top: 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-
-
-    #timer {
-      margin-top: 10px;
-      font-size: 1.1em;
-      color: #00695c;
-    }
-
-    footer {
-      margin-top: 40px;
-      font-size: 0.9em;
-      color: #555;
-    }
-
-    /* Mensaje grande centrado con animación */
-    #message-overlay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.7);
-      background: rgba(0, 150, 136, 0.9);
-      color: white;
-      font-size: 3em;
-      font-weight: 700;
-      padding: 30px 50px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 150, 136, 0.8);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 9999;
-      text-align: center;
-      user-select: none;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    #message-overlay.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
-    }
-
-    #message-overlay.error {
-      background: rgba(211, 47, 47, 0.9);
-      box-shadow: 0 0 20px rgba(211, 47, 47, 0.8);
-    }
-
-    /* Pantalla WASTED estilo GTA */
-    #wasted-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.511) center center no-repeat;
-      background-size: contain;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 10000;
-      transition: opacity 1s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      font-size: 10vw;
-      font-weight: 900;
-      text-shadow:
-        -2px -2px 0 #ff0000,
-        2px -2px 0 #ff0000,
-        -2px 2px 0 #ff0000,
-        2px 2px 0 #ff0000;
-      user-select: none;
-    }
-
-    #wasted-screen.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    #modoNocheBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #3e7670;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 1.5em;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  z-index: 10001;
-}
-
-#modoNocheBtn:hover {
-  background-color: #004d40;
-  transform: scale(1.1);
-}
-
-/* Modo oscuro para toda la página */
-body.modo-oscuro {
-  background-color: #121212;
-  color: #eee;
-}
-
-/* Modo oscuro adaptado a otros elementos */
-body.modo-oscuro .controls button,
-body.modo-oscuro .controls select,
-body.modo-oscuro #modoNocheBtn {
-  background-color: #333;
-  color: #eee;
-}
-
-body.modo-oscuro .controls button:hover,
-body.modo-oscuro .controls select:hover,
-body.modo-oscuro #modoNocheBtn:hover {
-  background-color: #555;
-}
-
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <button id="modoNocheBtn" onclick="alternarModo()">🌙</button>
@@ -334,7 +34,7 @@ body.modo-oscuro #modoNocheBtn:hover {
 
   <div class="controls" style="margin-top:10px;">
     <button onclick="verificarSudoku()">✅ Verificar</button>
-    <button onclick="mostrarSolucionT()">🔍 Mostrar Solución</button>
+    <button onclick="mostrarSolucionT()">🔍 Mostrar Solución (No recomendado)</button>
     <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
   </div>
 
@@ -568,49 +268,76 @@ body.modo-oscuro #modoNocheBtn:hover {
     }
 
     // Validar Sudoku
-    function verificarSudoku() {
-      const inputs = board.querySelectorAll("input:not(:disabled)");
-      let correcto = true;
+  function mostrarMedioRandom() {
+  // Escoge uno al azar
+  const medio = medios[Math.floor(Math.random() * medios.length)];
 
-      // Recorremos cada celda vacía
-      inputs.forEach(input => {
-        input.classList.remove("correct");
-        input.classList.remove("incorrect");
-        const valor = input.value;
-        if (!valor) {
-          correcto = false;
-          input.classList.add("incorrect");
-          return;
-        }
-        const idx = valorInputAIndice(valor);
-        if (idx === null) {
-          correcto = false;
-          input.classList.add("incorrect");
-          return;
-        }
+  // Crear el overlay si no existe
+  let overlay = document.getElementById("media-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "media-overlay";
+    Object.assign(overlay.style, {
+      position: "fixed",
+      top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: "rgba(0,0,0,0.7)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    });
+    document.body.appendChild(overlay);
+  }
 
-        // Identificar posición fila y columna
-        const celdaDiv = input.parentElement;
-        const pos = Array.from(board.children).indexOf(celdaDiv);
-        const fila = Math.floor(pos / 9);
-        const col = pos % 9;
+  overlay.innerHTML = "";
 
-        if (idx === solucion[fila][col]) {
-          input.classList.add("correct");
-        } else {
-          input.classList.add("incorrect");
-          correcto = false;
-        }
+  if (medio.tipo === "imagen") {
+    const img = document.createElement("img");
+    img.src = medio.src;
+    img.style.maxWidth = "80vw";
+    img.style.maxHeight = "80vh";
+    overlay.appendChild(img);
+  } else if (medio.tipo === "video") {
+    const video = document.createElement("video");
+    video.src = medio.src;
+    video.style.maxWidth = "80vw";
+    video.style.maxHeight = "80vh";
+    video.autoplay = true;
+    video.controls = false;
+    // video.muted = true; // 🔇 ¡Esto se elimina para que tenga sonido!
+    video.playsInline = true;
+    video.loop = true;
+
+    // Asegurarse que el video esté listo para reproducir con sonido
+    video.addEventListener("canplay", () => {
+      video.play().catch((err) => {
+        console.error("Autoplay con sonido falló:", err);
       });
+    });
 
-      if (correcto) {
-        mostrarMensaje("¡Felicidades! Sudoku completado correctamente 🎉", false);
-        reproducirSonido(true);
-      } else {
-        mostrarMensaje("Algunos valores son incorrectos o están vacíos.", true);
-        reproducirSonido(false);
-      }
-    }
+    overlay.appendChild(video);
+  }
+
+  overlay.style.display = "flex";
+
+  // Usa la duración específica de cada medio para ocultar el overlay
+  setTimeout(() => {
+    overlay.style.display = "none";
+  }, medio.duracion);
+}
+
+
+// Ejemplo de uso en la función de verificar sudoku
+function verificarSudoku() {
+  // lógica de verificación...
+
+  const sudokuEstaBien = false; // para probar que esté mal
+
+  if (!sudokuEstaBien) {
+    document.getElementById("sound-wrong").play();
+    mostrarMedioRandom();  // ahora usa duración personalizada
+  }
+}
 
     // Mostrar mensaje superpuesto
     function mostrarMensaje(texto, esError) {
@@ -675,65 +402,96 @@ body.modo-oscuro #modoNocheBtn:hover {
   }
   </script>
   <div id="video-container" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); z-index:10002; width:80vw; height:45vw; max-width: 800px; max-height: 450px; box-shadow: 0 0 15px rgba(0,0,0,0.7); border-radius: 15px; overflow:hidden;">
-  <iframe
-    id="youtube-player"
-    width="100%"
-    height="100%"
-    src=""
-    frameborder="0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen
-  ></iframe>
+  <div id="youtube-player" style="width:100%; height:100%;"></div>
 </div>
+
 <script>
-  function mostrarSolucionT() {
-  const videoContainer = document.getElementById('video-container');
-  const player = document.getElementById('youtube-player');
-
-  // ID del video de YouTube que quieres mostrar (cámbialo por tu video)
-  const videoId = '1gUCu2e_JiM';
-
-  // Parámetros para ocultar controles, reproducir automáticamente y modo "limpio"
-  // modestbranding=1 oculta el logo de YouTube
-  // controls=0 oculta los controles
-  // autoplay=1 reproduce automáticamente
-  // rel=0 no muestra videos relacionados
-  // showinfo=0 no muestra título (ya deprecated, pero lo dejamos)
-  // disablekb=1 deshabilita control con teclado
-  // mute=1 (Youtube requiere para autoplay en algunos navegadores)
-  // loop=0 para que no se repita
-
-  const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&enablejsapi=1`;
-
-
-  player.src = src;
-  videoContainer.style.display = 'block';
-
-  // Función para detectar cuando el video termina usando la API de YouTube
-  // Cargar la API de iframe player de YouTube
+  // Cargar la API de YouTube solo una vez
   if (!window.YT) {
-    let tag = document.createElement('script');
+    const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
-    let firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    document.head.appendChild(tag);
   }
 
-  // Crear el reproductor con API para escuchar evento 'ended'
-  window.onYouTubeIframeAPIReady = function() {
-    window.playerYT = new YT.Player('youtube-player', {
+  let playerYT;
+  let videoReady = false;
+
+  // Esta función se llama cuando la API de YouTube está lista
+  function onYouTubeIframeAPIReady() {
+    playerYT = new YT.Player('youtube-player', {
+      width: '100%',
+      height: '100%',
+      videoId: '', // Se asignará dinámicamente
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        modestbranding: 1,
+        rel: 0,
+        disablekb: 1,
+        showinfo: 0,
+        // mute: 1, // quítalo si quieres que suene (requiere clic previo)
+      },
       events: {
-        'onStateChange': function(event) {
-          if(event.data == YT.PlayerState.ENDED) {
-            // Al terminar el video, ocultamos el contenedor y limpiamos el src para detenerlo
+        onStateChange: function (event) {
+          if (event.data === YT.PlayerState.ENDED) {
+            const videoContainer = document.getElementById('video-container');
             videoContainer.style.display = 'none';
-            player.src = '';
+            playerYT.stopVideo(); // Detenemos el video
           }
         }
       }
     });
-  }
-}
 
+    videoReady = true;
+  }
+
+  // Esta función la llamas cuando se hace clic en el botón
+  function mostrarSolucionT() {
+    const videoId = '1gUCu2e_JiM'; // tu video
+    const videoContainer = document.getElementById('video-container');
+
+    if (playerYT && videoReady) {
+      playerYT.loadVideoById(videoId);
+      videoContainer.style.display = 'block';
+    } else {
+      // Si el reproductor aún no está listo, espera hasta que lo esté
+      const interval = setInterval(() => {
+        if (playerYT && videoReady) {
+          playerYT.loadVideoById(videoId);
+          videoContainer.style.display = 'block';
+          clearInterval(interval);
+        }
+      }, 100);
+    }
+  }
 </script>
+<div id="multimedia-container" style="display:none; text-align:center; margin-top:20px;"></div>
+<script>
+  const medios = [
+  { tipo: 'imagen', src: 'img.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img1.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img2.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img3.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img4.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img5.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img6.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img7.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img8.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img9.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img10.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img11.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img12.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img13.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img14.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img15.jpeg', duracion: 3000 },
+  { tipo: 'imagen', src: 'img16.jpeg', duracion: 3000 },
+  { tipo: 'video', src: 'vid.mp4', duracion: 19000 },
+  { tipo: 'video', src: 'vid1.mp4', duracion: 3000 },
+  { tipo: 'video', src: 'vid2.mp4', duracion: 45000 },
+  { tipo: 'video', src: 'vid3.mp4', duracion: 15000 },
+  // puedes agregar más y poner duraciones diferentes
+];
+</script>
+
 </body>
 </html>
