@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧪 Sudoku Químico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #e0f7fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #003344;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #00796b;
+    }
+
+    .description {
+      max-width: 700px;
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    .sudoku {
+      display: grid;
+      grid-template-columns: repeat(9, 60px);
+      grid-template-rows: repeat(9, 60px);
+      border: 4px solid #006064;
+    }
+
+    .cell {
+      box-sizing: border-box;
+      border: 1px solid #80cbc4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .cell input {
+      width: 100%;
+      height: 100%;
+      font-size: 12px;
+      text-align: center;
+      font-weight: bold;
+      text-transform: capitalize;
+      border: none;
+      background: transparent;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .cell input.correct {
+      background-color: #c8e6c9;
+      box-sizing: border-box;
+    }
+
+    .cell input.incorrect {
+      background-color: #ffcdd2;
+      box-sizing: border-box;
+    }
+
+    .top-border { border-top: 3px solid #004d40; }
+    .left-border { border-left: 3px solid #004d40; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+      gap: 10px;
+    }
+
+    .legend-item {
+      background: #7dc0ca;
+      padding: 5px 10px;
+      border: 1px solid #4dd0e1;
+      border-radius: 5px;
+      font-size: 0.95em;
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .controls button, .controls select {
+      padding: 10px 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #00796b;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .controls button:hover, .controls select:hover {
+      background-color: #004d40;
+    }
+
+    #timer {
+      margin-top: 10px;
+      font-size: 1.1em;
+      color: #00695c;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    /* Mensaje grande centrado con animación */
+    #message-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+      background: rgba(0, 150, 136, 0.9);
+      color: white;
+      font-size: 3em;
+      font-weight: 700;
+      padding: 30px 50px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 150, 136, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+      text-align: center;
+      user-select: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    #message-overlay.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    #message-overlay.error {
+      background: rgba(211, 47, 47, 0.9);
+      box-shadow: 0 0 20px rgba(211, 47, 47, 0.8);
+    }
+
+    /* Pantalla WASTED estilo GTA */
+    #wasted-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.511) center center no-repeat;
+      background-size: contain;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10000;
+      transition: opacity 1s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      font-size: 10vw;
+      font-weight: 900;
+      text-shadow:
+        -2px -2px 0 #ff0000,
+        2px -2px 0 #ff0000,
+        -2px 2px 0 #ff0000,
+        2px 2px 0 #ff0000;
+      user-select: none;
+    }
+
+    #wasted-screen.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #modoNocheBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #3e7670;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.5em;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  z-index: 10001;
+}
+
+#modoNocheBtn:hover {
+  background-color: #004d40;
+  transform: scale(1.1);
+}
+
+/* Modo oscuro para toda la página */
+body.modo-oscuro {
+  background-color: #121212;
+  color: #eee;
+}
+
+/* Modo oscuro adaptado a otros elementos */
+body.modo-oscuro .controls button,
+body.modo-oscuro .controls select,
+body.modo-oscuro #modoNocheBtn {
+  background-color: #333;
+  color: #eee;
+}
+
+body.modo-oscuro .controls button:hover,
+body.modo-oscuro .controls select:hover,
+body.modo-oscuro #modoNocheBtn:hover {
+  background-color: #555;
+}
+
+  </style>
+</head>
+<body>
+  <button id="modoNocheBtn" onclick="alternarModo()">🌙</button>
+
+  <h1>Sudoku Químico 🧪</h1>
+  <p class="description">Rellena las casillas con los nombres de los elementos químicos (o sus símbolos) del 1 al 9 sin repetir en la misma fila, columna o subcuadro 3x3.</p>
+
+  <div class="controls">
+    <label for="difficulty">Selecciona dificultad: </label>
+    <select id="difficulty" onchange="reiniciarJuego()">
+      <option value="35">Fácil (35 celdas vacías)</option>
+      <option value="45" selected>Medio (45 celdas vacías)</option>
+      <option value="55">Difícil (55 celdas vacías)</option>
+    </select>
+
+    <label for="displayMode">Mostrar como: </label>
+    <select id="displayMode" onchange="reiniciarJuego()">
+      <option value="simbolo" selected>Símbolos (H, O, C...)</option>
+      <option value="nombre">Nombres completos</option>
+    </select>
+  </div>
+
+  <div id="timer">Tiempo: 0s</div>
+
+  <div class="sudoku" id="sudoku-board"></div>
+
+  <div class="controls" style="margin-top:10px;">
+    <button onclick="verificarSudoku()">✅ Verificar</button>
+    <button onclick="mostrarSolucion()">🔍 Mostrar Solución</button>
+    <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
+  </div>
+
+  <div class="legend" id="legend">
+    <!-- Se llenará dinámicamente -->
+  </div>
+
+  <footer>
+    Desarrollado con ❤️ para el aprendizaje de química y lógica. © 2025
+  </footer>
+
+  <div id="message-overlay"></div>
+  <div id="wasted-screen">WASTED</div>
+
+  <audio id="sound-correct" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
+  <audio id="sound-wrong" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg" preload="auto"></audio>
+
+  <script>
+    const elementos = [
+      { nombre: "Hidrógeno", simbolo: "H", descripcion: "Hidrógeno: el elemento más ligero" },
+      { nombre: "Helio", simbolo: "He", descripcion: "Helio: gas noble y muy ligero" },
+      { nombre: "Litio", simbolo: "Li", descripcion: "Litio: usado en baterías" },
+      { nombre: "Berilio", simbolo: "Be", descripcion: "Berilio: metal alcalinotérreo" },
+      { nombre: "Boro", simbolo: "B", descripcion: "Boro: metaloide con usos industriales" },
+      { nombre: "Carbono", simbolo: "C", descripcion: "Carbono: base de la vida" },
+      { nombre: "Nitrógeno", simbolo: "N", descripcion: "Nitrógeno: mayor componente del aire" },
+      { nombre: "Oxígeno", simbolo: "O", descripcion: "Oxígeno: esencial para la respiración" },
+      { nombre: "Flúor", simbolo: "F", descripcion: "Flúor: muy reactivo, usado en pastas dentales" }
+    ];
+
+
+    let board = document.getElementById("sudoku-board");
+    let solucion = [];
+    let timerInterval;
+    let tiempo = 0;
+
+    // Para manejar modo (símbolo o nombre)
+    function obtenerTextoElemento(index) {
+      const modo = document.getElementById("displayMode").value;
+      if (modo === "nombre") return elementos[index].nombre;
+      return elementos[index].simbolo;
+    }
+
+    // Tablero base solución (matriz 9x9 de índices 0-8 que corresponden a los elementos)
+    const baseSolucion = [
+      [0,1,2, 3,4,5, 6,7,8],
+      [3,4,5, 6,7,8, 0,1,2],
+      [6,7,8, 0,1,2, 3,4,5],
+
+      [1,2,0, 4,5,3, 7,8,6],
+      [4,5,3, 7,8,6, 1,2,0],
+      [7,8,6, 1,2,0, 4,5,3],
+
+      [2,0,1, 5,3,4, 8,6,7],
+      [5,3,4, 8,6,7, 2,0,1],
+      [8,6,7, 2,0,1, 5,3,4]
+    ];
+
+    // Copia profunda de matriz
+    function copiarMatriz(m) {
+      return m.map(fila => fila.slice());
+    }
+
+    // Mezcla la solución base para obtener diferentes tableros
+    function mezclarSolucion(sol) {
+      let mezcla = copiarMatriz(sol);
+
+      // Intercambiar filas dentro de subcuadros 3x3 (permuta filas dentro de cada bloque)
+      function permutarFilaBloque(bloque) {
+        const base = bloque * 3;
+        const filas = [0,1,2].sort(() => Math.random() - 0.5);
+        let temp = [];
+        for(let i=0;i<3;i++) temp[i] = mezcla[base+filas[i]];
+        for(let i=0;i<3;i++) mezcla[base+i] = temp[i];
+      }
+
+      // Intercambiar columnas dentro de subcuadros 3x3
+      function permutarColumnaBloque(bloque) {
+        const base = bloque * 3;
+        const cols = [0,1,2].sort(() => Math.random() - 0.5);
+        for(let fila=0; fila<9; fila++) {
+          let temp = [];
+          for(let i=0;i<3;i++) temp[i] = mezcla[fila][base+cols[i]];
+          for(let i=0;i<3;i++) mezcla[fila][base+i] = temp[i];
+        }
+      }
+
+      // Aplicar permutaciones aleatorias
+      for(let i=0;i<3;i++) {
+        permutarFilaBloque(i);
+        permutarColumnaBloque(i);
+      }
+
+      return mezcla;
+    }
+
+    // Quitar celdas para formar el puzzle
+    function crearPuzzle(sol, vacias) {
+      let puzzle = copiarMatriz(sol);
+      let celdasVacias = 0;
+      while (celdasVacias < vacias) {
+        let f = Math.floor(Math.random() * 9);
+        let c = Math.floor(Math.random() * 9);
+        if (puzzle[f][c] !== null) {
+          puzzle[f][c] = null;
+          celdasVacias++;
+        }
+      }
+      return puzzle;
+    }
+
+    function crearTablero(vacias) {
+      board.innerHTML = "";
+      tiempo = 0;
+      clearInterval(timerInterval);
+      document.getElementById("timer").textContent = "Tiempo: 0s";
+
+      solucion = mezclarSolucion(baseSolucion);
+      const puzzle = crearPuzzle(solucion, vacias);
+
+      for(let fila=0; fila<9; fila++) {
+        for(let col=0; col<9; col++) {
+          const celda = document.createElement("div");
+          celda.classList.add("cell");
+          if (fila % 3 === 0) celda.classList.add("top-border");
+          if (col % 3 === 0) celda.classList.add("left-border");
+
+          if (puzzle[fila][col] !== null) {
+            // Celda con valor fijo
+            const span = document.createElement("input");
+            span.type = "text";
+            span.disabled = true;
+            span.value = obtenerTextoElemento(puzzle[fila][col]);
+            celda.appendChild(span);
+          } else {
+            // Celda para que usuario escriba
+            const input = document.createElement("input");
+            input.type = "text";
+            input.maxLength = 10;
+            input.autocomplete = "off";
+            input.spellcheck = false;
+            input.addEventListener("input", () => {
+              input.value = input.value.trim();
+              // Convertir a mayúscula inicial para nombres, o mayúscula para símbolos
+              if(document.getElementById("displayMode").value === "nombre"){
+                input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+              } else {
+                input.value = input.value.toUpperCase();
+              }
+            });
+            celda.appendChild(input);
+          }
+          board.appendChild(celda);
+        }
+      }
+      mostrarLeyenda();
+      iniciarTemporizador();
+    }
+
+    // Mostrar leyenda con elementos y sus símbolos
+    function mostrarLeyenda() {
+      const legend = document.getElementById("legend");
+      legend.innerHTML = "";
+      const modo = document.getElementById("displayMode").value;
+      for(let i=0; i<elementos.length; i++) {
+        const div = document.createElement("div");
+        div.classList.add("legend-item");
+        if(modo === "nombre") {
+          div.textContent = `${elementos[i].nombre} (${elementos[i].simbolo})`;
+        } else {
+          div.textContent = `${elementos[i].simbolo} - ${elementos[i].nombre}`;
+        }
+        legend.appendChild(div);
+      }
+    }
+
+    // Obtener el valor del input en índice, retornando índice de elemento o null
+    function valorInputAIndice(valor) {
+      const modo = document.getElementById("displayMode").value;
+      valor = valor.trim();
+      if (modo === "nombre") {
+        for(let i=0; i<elementos.length; i++) {
+          if (elementos[i].nombre.toLowerCase() === valor.toLowerCase()) return i;
+        }
+      } else {
+        for(let i=0; i<elementos.length; i++) {
+          if (elementos[i].simbolo.toLowerCase() === valor.toLowerCase()) return i;
+        }
+      }
+      return null;
+    }
+
+    // Validar Sudoku
+    function verificarSudoku() {
+      const inputs = board.querySelectorAll("input:not(:disabled)");
+      let correcto = true;
+
+      // Recorremos cada celda vacía
+      inputs.forEach(input => {
+        input.classList.remove("correct");
+        input.classList.remove("incorrect");
+        const valor = input.value;
+        if (!valor) {
+          correcto = false;
+          input.classList.add("incorrect");
+          return;
+        }
+        const idx = valorInputAIndice(valor);
+        if (idx === null) {
+          correcto = false;
+          input.classList.add("incorrect");
+          return;
+        }
+
+        // Identificar posición fila y columna
+        const celdaDiv = input.parentElement;
+        const pos = Array.from(board.children).indexOf(celdaDiv);
+        const fila = Math.floor(pos / 9);
+        const col = pos % 9;
+
+        if (idx === solucion[fila][col]) {
+          input.classList.add("correct");
+        } else {
+          input.classList.add("incorrect");
+          correcto = false;
+        }
+      });
+
+      if (correcto) {
+        mostrarMensaje("¡Felicidades! Sudoku completado correctamente 🎉", false);
+        reproducirSonido(true);
+      } else {
+        mostrarMensaje("Algunos valores son incorrectos o están vacíos.", true);
+        reproducirSonido(false);
+      }
+    }
+
+    // Mostrar mensaje superpuesto
+    function mostrarMensaje(texto, esError) {
+      const overlay = document.getElementById("message-overlay");
+      overlay.textContent = texto;
+      overlay.className = "show";
+      if (esError) overlay.classList.add("error");
+      setTimeout(() => {
+        overlay.className = "";
+      }, 3000);
+    }
+
+    // Mostrar solución
+    function mostrarSolucion() {
+      const inputs = board.querySelectorAll("input:not(:disabled)");
+      inputs.forEach(input => {
+        const celdaDiv = input.parentElement;
+        const pos = Array.from(board.children).indexOf(celdaDiv);
+        const fila = Math.floor(pos / 9);
+        const col = pos % 9;
+        input.value = obtenerTextoElemento(solucion[fila][col]);
+        input.classList.remove("incorrect");
+        input.classList.add("correct");
+      });
+      mostrarMensaje("Solución mostrada", false);
+    }
+
+    // Reiniciar juego (regenera el tablero según dificultad y modo)
+    function reiniciarJuego() {
+      clearInterval(timerInterval);
+      tiempo = 0;
+      const vacias = parseInt(document.getElementById("difficulty").value);
+      crearTablero(vacias);
+    }
+
+    // Temporizador simple
+    function iniciarTemporizador() {
+      clearInterval(timerInterval);
+      tiempo = 0;
+      const timerDisplay = document.getElementById("timer");
+      timerInterval = setInterval(() => {
+        tiempo++;
+        timerDisplay.textContent = `Tiempo: ${tiempo}s`;
+      }, 1000);
+    }
+
+    // Reproducir sonido
+    function reproducirSonido(esCorrecto) {
+      const audio = esCorrecto ? document.getElementById("sound-correct") : document.getElementById("sound-wrong");
+      audio.currentTime = 0;
+      audio.play();
+    }
+
+    // Inicializamos el juego con dificultad media y símbolos
+    reiniciarJuego();
+
+
+  function alternarModo() {
+    document.body.classList.toggle('modo-oscuro');
+    const boton = document.getElementById('modoNocheBtn');
+    boton.textContent = document.body.classList.contains('modo-oscuro') ? '☀️' : '🌙';
+  }
+  </script>
+</body>
+</html>
