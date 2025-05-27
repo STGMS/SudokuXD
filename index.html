@@ -81,7 +81,7 @@
       flex-wrap: wrap;
       justify-content: center;
       margin-top: 30px;
-      gap: 10px;
+      gap: 15px;
     }
 
     .legend-item {
@@ -116,6 +116,75 @@
     .controls button:hover, .controls select:hover {
       background-color: #004d40;
     }
+
+
+    .tooltip {
+  position: relative;
+  display: inline-block;
+  background: #7dc0ca;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: default;
+  color: #004d40;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.tooltip:hover {
+  background-color: #4db6ac;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 220px;
+  max-width: 90vw;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 130%; /* un poco más alto */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  font-size: 0.9em;
+  line-height: 1.3em;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Flecha */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+
+/* Imagen dentro del tooltip */
+.tooltip .tooltiptext img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+
 
     #timer {
       margin-top: 10px;
@@ -269,8 +338,48 @@ body.modo-oscuro #modoNocheBtn:hover {
     <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
   </div>
 
-  <div class="legend" id="legend">
-    <!-- Se llenará dinámicamente -->
+  <div class="legend">
+    <!-- Elemento 1: Hidrógeno -->
+<div class="tooltip">H - Hidrógeno
+  <span class="tooltiptext">
+    Hidrógeno: el más ligero
+    <img src="https://media.istockphoto.com/id/1408842388/es/vector/h-informaci%C3%B3n-del-elemento-de-hidr%C3%B3geno-hechos-propiedades-tendencias-usos-y-comparaci%C3%B3n.jpg?s=612x612&w=0&k=20&c=6bjme-aQsHwEZ9ZkF726TZ7j-wCALG4TOAe7i4ZSCzA=" alt="Hidrógeno">
+  </span>
+</div>
+
+<!-- Elemento 2: Helio -->
+<div class="tooltip">He - Helio
+  <span class="tooltiptext">
+    Helio: gas noble, muy ligero
+    <img src="https://media.istockphoto.com/id/494979590/es/vector/s%C3%ADmbolo-de-electrones-diagrama-helio.jpg?s=612x612&w=0&k=20&c=U8Tva995Pv0c_Gj6hm3CEiet0vPFrR92mFDnKIiPN8U=" alt="Helio">
+  </span>
+</div>
+
+<!-- Elemento 3: Litio -->
+<div class="tooltip">Li - Litio
+  <span class="tooltiptext">
+    Litio: metal alcalino, usado en baterías
+    <img src="https://media.istockphoto.com/id/488550064/es/vector/s%C3%ADmbolo-y-diagrama-de-electrones.jpg?s=612x612&w=0&k=20&c=-bAWt_2XYMrwyjTEtxB3SYeS1aprxPYAIJNfw6dUuJE=" alt="Litio">
+  </span>
+</div>
+    <div class="tooltip">Be - Berilio
+      <span class="tooltiptext">
+        Berilio: metal alcalinotérreo
+        <img src="https://media.istockphoto.com/id/488550064/es/vector/s%C3%ADmbolo-y-diagrama-de-electrones.jpg?s=612x612&w=0&k=20&c=-bAWt_2XYMrwyjTEtxB3SYeS1aprxPYAIJNfw6dUuJE=" alt="Berilio">
+      </span>
+    </div>
+    <div class="tooltip">B - Boro
+      <span class="tooltiptext">
+        Boro: metaloide con usos industriales
+      <img src="https://media.istockphoto.com/id/1148208538/es/vector/boron-atom-electron-shell.jpg?s=612x612&w=0&k=20&c=ustfMc64z4JT51Quc40ENrToR6h7XF4MmmfY0Tuj8bM=" alt="Boro">
+      </span>
+    </div>
+    <div class="tooltip">C - Carbono
+      <span class="tooltiptext">
+        Carbono: base de la vida
+        <img src="https://media.istockphoto.com/id/500262105/es/vector/carbon-atom-on-white-background-estructura.jpg?s=612x612&w=0&k=20&c=n0voCsVEV76H6L4I3iEHg5Rsy2g2yhU9BNQX80QDVXA=" alt="Carbono">
+      </span>
+    </div>
   </div>
 
   <footer>
