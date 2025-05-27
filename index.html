@@ -334,7 +334,7 @@ body.modo-oscuro #modoNocheBtn:hover {
 
   <div class="controls" style="margin-top:10px;">
     <button onclick="verificarSudoku()">✅ Verificar</button>
-    <button onclick="mostrarSolucion()">🔍 Mostrar Solución</button>
+    <button onclick="mostrarSolucionT()">🔍 Mostrar Solución</button>
     <button onclick="reiniciarJuego()">🔄 Reiniciar</button>
   </div>
 
@@ -365,7 +365,7 @@ body.modo-oscuro #modoNocheBtn:hover {
     <div class="tooltip">Be - Berilio
       <span class="tooltiptext">
         Berilio: metal alcalinotérreo
-        <img src="https://media.istockphoto.com/id/488550064/es/vector/s%C3%ADmbolo-y-diagrama-de-electrones.jpg?s=612x612&w=0&k=20&c=-bAWt_2XYMrwyjTEtxB3SYeS1aprxPYAIJNfw6dUuJE=" alt="Berilio">
+        <img src="https://previews.123rf.com/images/oorka/oorka1704/oorka170400003/75507009-procesamiento-3d-de-la-estructura-del-%C3%A1tomo-de-berilio-aislado-sobre-fondo-blanco-los-protones-se-re.jpg" alt="Berilio">
       </span>
     </div>
     <div class="tooltip">B - Boro
@@ -674,5 +674,66 @@ body.modo-oscuro #modoNocheBtn:hover {
     boton.textContent = document.body.classList.contains('modo-oscuro') ? '☀️' : '🌙';
   }
   </script>
+  <div id="video-container" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%); z-index:10002; width:80vw; height:45vw; max-width: 800px; max-height: 450px; box-shadow: 0 0 15px rgba(0,0,0,0.7); border-radius: 15px; overflow:hidden;">
+  <iframe
+    id="youtube-player"
+    width="100%"
+    height="100%"
+    src=""
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
+</div>
+<script>
+  function mostrarSolucionT() {
+  const videoContainer = document.getElementById('video-container');
+  const player = document.getElementById('youtube-player');
+
+  // ID del video de YouTube que quieres mostrar (cámbialo por tu video)
+  const videoId = '1gUCu2e_JiM';
+
+  // Parámetros para ocultar controles, reproducir automáticamente y modo "limpio"
+  // modestbranding=1 oculta el logo de YouTube
+  // controls=0 oculta los controles
+  // autoplay=1 reproduce automáticamente
+  // rel=0 no muestra videos relacionados
+  // showinfo=0 no muestra título (ya deprecated, pero lo dejamos)
+  // disablekb=1 deshabilita control con teclado
+  // mute=1 (Youtube requiere para autoplay en algunos navegadores)
+  // loop=0 para que no se repita
+
+  const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&enablejsapi=1`;
+
+
+  player.src = src;
+  videoContainer.style.display = 'block';
+
+  // Función para detectar cuando el video termina usando la API de YouTube
+  // Cargar la API de iframe player de YouTube
+  if (!window.YT) {
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    let firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
+
+  // Crear el reproductor con API para escuchar evento 'ended'
+  window.onYouTubeIframeAPIReady = function() {
+    window.playerYT = new YT.Player('youtube-player', {
+      events: {
+        'onStateChange': function(event) {
+          if(event.data == YT.PlayerState.ENDED) {
+            // Al terminar el video, ocultamos el contenedor y limpiamos el src para detenerlo
+            videoContainer.style.display = 'none';
+            player.src = '';
+          }
+        }
+      }
+    });
+  }
+}
+
+</script>
 </body>
 </html>
