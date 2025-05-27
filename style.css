@@ -1,116 +1,147 @@
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background: #e0f7fa;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #003344;
-      position: relative;
-      min-height: 100vh;
-    }
+/* ---------------------- */
+/* 1. ESTILOS GENERALES */
+/* ---------------------- */
+body {
+  font-family: 'Orbitron', sans-serif;
+  background: #e0f7fa;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #003344;
+  position: relative;
+  min-height: 100vh;
+}
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-      color: #00796b;
-    }
+h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+  color: #00796b;
+}
 
-    .description {
-      max-width: 700px;
-      text-align: center;
-      font-size: 1.2em;
-      margin-bottom: 30px;
-    }
+.description {
+  max-width: 700px;
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
 
-    .sudoku {
-      display: grid;
-      grid-template-columns: repeat(9, 60px);
-      grid-template-rows: repeat(9, 60px);
-      border: 4px solid #006064;
-    }
+#timer {
+  margin-top: 10px;
+  font-size: 1.1em;
+  color: #00695c;
+}
 
-    .cell {
-      box-sizing: border-box;
-      border: 1px solid #80cbc4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      overflow: hidden;
-    }
+footer {
+  margin-top: 40px;
+  font-size: 0.9em;
+  color: #555;
+}
 
-    .cell input {
-      width: 100%;
-      height: 100%;
-      font-size: 12px;
-      text-align: center;
-      font-weight: bold;
-      text-transform: capitalize;
-      border: none;
-      background: transparent;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+/* ---------------------- */
+/* 2. TABLERO SUDOKU */
+/* ---------------------- */
+.sudoku {
+  display: grid;
+  grid-template-columns: repeat(9, 60px);
+  grid-template-rows: repeat(9, 60px);
+  border: 4px solid #006064;
+}
 
-    .cell input.correct {
-      background-color: #c8e6c9;
-      box-sizing: border-box;
-    }
+.cell {
+  box-sizing: border-box;
+  border: 1px solid #80cbc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+}
 
-    .cell input.incorrect {
-      background-color: #ffcdd2;
-      box-sizing: border-box;
-    }
+.cell input {
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: capitalize;
+  border: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    .top-border { border-top: 3px solid #004d40; }
-    .left-border { border-left: 3px solid #004d40; }
+.cell input.correct {
+  background-color: #c8e6c9;
+}
 
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 30px;
-      gap: 15px;
-    }
+.cell input.incorrect {
+  background-color: #ffcdd2;
+}
 
-    .legend-item {
-      background: #7dc0ca;
-      padding: 5px 10px;
-      border: 1px solid #4dd0e1;
-      border-radius: 5px;
-      font-size: 0.95em;
-      text-align: center;
-      min-width: 80px;
-    }
+/* Bordes fuertes para separar subcuadrantes */
+.top-border {
+  border-top: 3px solid #004d40;
+}
+.left-border {
+  border-left: 3px solid #004d40;
+}
 
-    .controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+/* ---------------------- */
+/* 3. LEYENDA */
+/* ---------------------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 15px;
+}
 
-    .controls button, .controls select {
-      padding: 10px 15px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background-color: #00796b;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+.legend-item {
+  background: #7dc0ca;
+  padding: 5px 10px;
+  border: 1px solid #4dd0e1;
+  border-radius: 5px;
+  font-size: 0.95em;
+  text-align: center;
+  min-width: 80px;
+}
 
-    .controls button:hover, .controls select:hover {
-      background-color: #004d40;
-    }
+/* ---------------------- */
+/* 4. CONTROLES */
+/* ---------------------- */
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
+.controls button,
+.controls select {
+  padding: 10px 15px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  background-color: #00796b;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-    .tooltip {
+.controls button:hover,
+.controls select:hover {
+  background-color: #004d40;
+}
+
+/* ---------------------- */
+/* 5. TOOLTIP */
+/* ---------------------- */
+.tooltip {
   position: relative;
   display: inline-block;
   background: #7dc0ca;
@@ -138,7 +169,7 @@
   border-radius: 8px;
   position: absolute;
   z-index: 10;
-  bottom: 130%; /* un poco más alto */
+  bottom: 130%;
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
@@ -155,7 +186,6 @@
   pointer-events: auto;
 }
 
-/* Flecha */
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
@@ -167,7 +197,6 @@
   border-color: rgba(0,0,0,0.85) transparent transparent transparent;
 }
 
-/* Imagen dentro del tooltip */
 .tooltip .tooltiptext img {
   max-width: 100%;
   height: auto;
@@ -176,86 +205,79 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
+/* ---------------------- */
+/* 6. MENSAJE ANIMADO */
+/* ---------------------- */
+#message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: rgba(0, 150, 136, 0.9);
+  color: white;
+  font-size: 3em;
+  font-weight: 700;
+  padding: 30px 50px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 150, 136, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  text-align: center;
+  user-select: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
+#message-overlay.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
 
-    #timer {
-      margin-top: 10px;
-      font-size: 1.1em;
-      color: #00695c;
-    }
+#message-overlay.error {
+  background: rgba(211, 47, 47, 0.9);
+  box-shadow: 0 0 20px rgba(211, 47, 47, 0.8);
+}
 
-    footer {
-      margin-top: 40px;
-      font-size: 0.9em;
-      color: #555;
-    }
+/* ---------------------- */
+/* 7. PANTALLA WASTED */
+/* ---------------------- */
+#wasted-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.511) center center no-repeat;
+  background-size: contain;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  font-size: 10vw;
+  font-weight: 900;
+  text-shadow:
+    -2px -2px 0 #ff0000,
+    2px -2px 0 #ff0000,
+    -2px 2px 0 #ff0000,
+    2px 2px 0 #ff0000;
+  user-select: none;
+  transition: opacity 1s ease;
+}
 
-    /* Mensaje grande centrado con animación */
-    #message-overlay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.7);
-      background: rgba(0, 150, 136, 0.9);
-      color: white;
-      font-size: 3em;
-      font-weight: 700;
-      padding: 30px 50px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 150, 136, 0.8);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 9999;
-      text-align: center;
-      user-select: none;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
+#wasted-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-    #message-overlay.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
-    }
-
-    #message-overlay.error {
-      background: rgba(211, 47, 47, 0.9);
-      box-shadow: 0 0 20px rgba(211, 47, 47, 0.8);
-    }
-
-    /* Pantalla WASTED estilo GTA */
-    #wasted-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.511) center center no-repeat;
-      background-size: contain;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 10000;
-      transition: opacity 1s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      font-size: 10vw;
-      font-weight: 900;
-      text-shadow:
-        -2px -2px 0 #ff0000,
-        2px -2px 0 #ff0000,
-        -2px 2px 0 #ff0000,
-        2px 2px 0 #ff0000;
-      user-select: none;
-    }
-
-    #wasted-screen.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    #modoNocheBtn {
+/* ---------------------- */
+/* 8. BOTÓN MODO NOCHE */
+/* ---------------------- */
+#modoNocheBtn {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -277,13 +299,14 @@
   transform: scale(1.1);
 }
 
-/* Modo oscuro para toda la página */
+/* ---------------------- */
+/* 9. MODO OSCURO */
+/* ---------------------- */
 body.modo-oscuro {
   background-color: #121212;
   color: #eee;
 }
 
-/* Modo oscuro adaptado a otros elementos */
 body.modo-oscuro .controls button,
 body.modo-oscuro .controls select,
 body.modo-oscuro #modoNocheBtn {
