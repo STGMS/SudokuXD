@@ -353,14 +353,23 @@ function verificarSudoku() {
     document.getElementById("sound-wrong").play();
     mostrarMedioRandom();
   } else {
+    reproducirAudioMario();
     clearInterval(timerInterval); // Detiene el tiempo cuando se gana
-    alert("¡Felicidades! El Sudoku está correcto.");
+    setTimeout(() => {
+      alert("¡Felicidades! El Sudoku está correcto.");
+    }, 100);
   }
 }
 
 // ===================================
 // MULTIMEDIA Y EFECTOS
 // ===================================
+
+/* Audio Mario */
+function reproducirAudioMario() {
+  const audio = new Audio('AudioMarioBros.mp3'); // Cambia la ruta al archivo de audio
+  audio.play();
+}
 
 /**
  * Muestra un medio aleatorio (imagen o video) cuando hay un error
