@@ -186,19 +186,28 @@ function crearPuzzle(sol, vacias) {
  */
 function crearTablero(vacias) {
   board.innerHTML = "";
-  tiempo = 0;
+  
+  // Reiniciar y mostrar el temporizador en 0
   clearInterval(timerInterval);
+  tiempo = 0;
   document.getElementById("timer").textContent = "Tiempo: 0s";
 
+  // Iniciar el temporizador
+  timerInterval = setInterval(() => {
+    tiempo++;
+    document.getElementById("timer").textContent = `Tiempo: ${tiempo}s`;
+  }, 1000);
+
+  // Generar solución mezclada y crear el puzzle con celdas vacías
   solucion = mezclarSolucion(baseSolucion);
   const puzzle = crearPuzzle(solucion, vacias);
 
-  for(let fila = 0; fila < 9; fila++) {
-    for(let col = 0; col < 9; col++) {
+  for (let fila = 0; fila < 9; fila++) {
+    for (let col = 0; col < 9; col++) {
       const celda = document.createElement("div");
       celda.classList.add("cell");
-      
-      // Añade bordes para separar bloques 3x3
+
+      // Bordes gruesos para separar los bloques 3x3
       if (fila % 3 === 0) celda.classList.add("top-border");
       if (col % 3 === 0) celda.classList.add("left-border");
 
@@ -210,32 +219,27 @@ function crearTablero(vacias) {
         span.value = obtenerTextoElemento(puzzle[fila][col]);
         celda.appendChild(span);
       } else {
-        // Celda vacía para que el usuario complete
+        // Celda vacía para completar
         const input = document.createElement("input");
         input.type = "text";
         input.maxLength = 10;
         input.autocomplete = "off";
         input.spellcheck = false;
-        
-        // Maneja la entrada del usuario
+
+        // Formatear entrada del usuario
         input.addEventListener("input", () => {
           input.value = input.value.trim();
-          // Formatea según el modo (nombre o símbolo)
-          if(document.getElementById("displayMode").value === "nombre"){
-            input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
-          } else {
-            input.value = input.value.toUpperCase();
-          }
+          input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
         });
-        
+
         celda.appendChild(input);
       }
+
       board.appendChild(celda);
     }
   }
-  
+
   mostrarLeyenda();
-  iniciarTemporizador();
 }
 
 /**
@@ -264,16 +268,93 @@ function mostrarLeyenda() {
 // VALIDACIÓN Y VERIFICACIÓN
 // ===================================
 
-/**
- * Verifica si el sudoku está completo y correcto
- */
 function verificarSudoku() {
-  // Lógica de verificación aquí...
-  const sudokuEstaBien = false; // Para testing - cambiar por lógica real
+  const inputs = board.querySelectorAll("input");
+  let sudokuEstaBien = true;
+
+  // Convertir inputs a matriz 9x9 de índices
+  const jugadorSolucion = [];
+  for (let fila = 0; fila < 9; fila++) {
+    jugadorSolucion[fila] = [];
+    for (let col = 0; col < 9; col++) {
+      const input = inputs[fila * 9 + col];
+      if (!input || input.value.trim() === "") {
+        sudokuEstaBien = false; // Celda vacía
+        break;
+      }
+      const indice = valorInputAIndice(input.value);
+      if (indice === null) {
+        sudokuEstaBien = false; // Valor no válido
+        break;
+      }
+      jugadorSolucion[fila][col] = indice;
+    }
+    if (!sudokuEstaBien) break;
+  }
 
   if (!sudokuEstaBien) {
     document.getElementById("sound-wrong").play();
     mostrarMedioRandom();
+    return;
+  }
+
+  // Verificar filas
+  for (let fila = 0; fila < 9; fila++) {
+    const seen = new Set();
+    for (let col = 0; col < 9; col++) {
+      if (seen.has(jugadorSolucion[fila][col])) {
+        sudokuEstaBien = false;
+        break;
+      }
+      seen.add(jugadorSolucion[fila][col]);
+    }
+    if (!sudokuEstaBien) break;
+  }
+
+  // Verificar columnas
+  if (sudokuEstaBien) {
+    for (let col = 0; col < 9; col++) {
+      const seen = new Set();
+      for (let fila = 0; fila < 9; fila++) {
+        if (seen.has(jugadorSolucion[fila][col])) {
+          sudokuEstaBien = false;
+          break;
+        }
+        seen.add(jugadorSolucion[fila][col]);
+      }
+      if (!sudokuEstaBien) break;
+    }
+  }
+
+  // Verificar bloques 3x3
+  if (sudokuEstaBien) {
+    for (let blockRow = 0; blockRow < 3; blockRow++) {
+      for (let blockCol = 0; blockCol < 3; blockCol++) {
+        const seen = new Set();
+        for (let fila = 0; fila < 3; fila++) {
+          for (let col = 0; col < 3; col++) {
+            const val = jugadorSolucion[blockRow * 3 + fila][blockCol * 3 + col];
+            if (seen.has(val)) {
+              sudokuEstaBien = false;
+              break;
+            }
+            seen.add(val);
+          }
+          if (!sudokuEstaBien) break;
+        }
+        if (!sudokuEstaBien) break;
+      }
+      if (!sudokuEstaBien) break;
+    }
+  }
+
+  // Resultado final
+  if (!sudokuEstaBien) {
+    document.getElementById("sound-wrong").play();
+    mostrarMedioRandom();
+  } else {
+    clearInterval(timerInterval); // Detiene el tiempo cuando se gana
+    alert("¡Felicidades! El Sudoku está correcto.");
   }
 }
 
