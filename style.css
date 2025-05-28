@@ -1,7 +1,8 @@
-/* ---------------------- */
+/* ---------------------- */ 
 /* 1. ESTILOS GENERALES */
 /* ---------------------- */
 body {
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: 'Orbitron', sans-serif;
   background: #e0f7fa;
   margin: 0;
@@ -65,12 +66,13 @@ footer {
   font-size: 12px;
   text-align: center;
   font-weight: bold;
-  text-transform: capitalize;
+  text-transform: none !important;
   border: none;
   background: transparent;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .cell input.correct {
@@ -237,41 +239,6 @@ footer {
 #message-overlay.error {
   background: rgba(211, 47, 47, 0.9);
   box-shadow: 0 0 20px rgba(211, 47, 47, 0.8);
-}
-
-/* ---------------------- */
-/* 7. PANTALLA WASTED */
-/* ---------------------- */
-#wasted-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.511) center center no-repeat;
-  background-size: contain;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 10000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  font-size: 10vw;
-  font-weight: 900;
-  text-shadow:
-    -2px -2px 0 #ff0000,
-    2px -2px 0 #ff0000,
-    -2px 2px 0 #ff0000,
-    2px 2px 0 #ff0000;
-  user-select: none;
-  transition: opacity 1s ease;
-}
-
-#wasted-screen.show {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 /* ---------------------- */
